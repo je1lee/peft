@@ -208,6 +208,10 @@ class Linear(nn.Module, LoraLayer):
         self._active_adapter = adapter_name
         self.update_layer(adapter_name, r, lora_alpha, lora_dropout, init_lora_weights, use_rslora)
         self.is_target_conv_1d_layer = is_target_conv_1d_layer
+<<<<<<< Updated upstream
+=======
+        self.active_switch = None
+>>>>>>> Stashed changes
 
     def merge(self, safe_merge: bool = False, adapter_names: Optional[List[str]] = None) -> None:
         """
@@ -307,6 +311,7 @@ class Linear(nn.Module, LoraLayer):
             result = self.base_layer(x, *args, **kwargs)
         else:
             result = self.base_layer(x, *args, **kwargs)
+<<<<<<< Updated upstream
             for active_adapter in self.active_adapters:
                 if active_adapter not in self.lora_A.keys():
                     continue
@@ -317,6 +322,24 @@ class Linear(nn.Module, LoraLayer):
                 x = x.to(lora_A.weight.dtype)
                 result += lora_B(lora_A(dropout(x))) * scaling
 
+=======
+            # for active_adapter in self.active_adapters:
+            #     if active_adapter not in self.lora_A.keys():
+            #         continue
+            #     lora_A = self.lora_A[active_adapter]
+            #     lora_B = self.lora_B[active_adapter]
+            #     dropout = self.lora_dropout[active_adapter]
+            #     scaling = self.scaling[active_adapter]
+            #     x = x.to(lora_A.weight.dtype)
+            #     result += lora_B(lora_A(dropout(x))) * scaling
+            for adapter_name in self.lora_A.keys():
+                if adapter_name == self.active_switch:
+                    x_ = x.to(self.lora_A[adapter_name].weight.dtype)
+                    result += self.lora_B[adapter_name](self.lora_A[adapter_name](self.lora_dropout[adapter_name](x_))) * self.scaling[adapter_name]
+                else:
+                    pass
+                
+>>>>>>> Stashed changes
         result = result.to(previous_dtype)
         return result
 

@@ -125,8 +125,14 @@ class PeftModel(PushToHubMixin, torch.nn.Module):
             self.base_model = cls(model, {adapter_name: peft_config}, adapter_name)
             self.set_additional_trainable_modules(peft_config, adapter_name)
 
+<<<<<<< Updated upstream
         if getattr(model, "is_gradient_checkpointing", True):
             model = self._prepare_model_for_gradient_checkpointing(model)
+=======
+        if getattr(model, "is_gradient_checkpointing", False):
+            pass
+            # model = self._prepare_model_for_gradient_checkpointing(model)
+>>>>>>> Stashed changes
 
         # the `pretraining_tp` is set for some models to simulate Tensor Parallelism during inference to avoid
         # numerical differences, https://github.com/pytorch/pytorch/issues/76232 - to avoid any unexpected
